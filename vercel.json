@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://fx-decision-recommendation-system-for.onrender.com/api/$1"
+      "destination": "/api/index.py"
     },
     {
       "source": "/(.*)",
@@ -16,5 +16,10 @@
       "destination": "/index.html",
       "permanent": false
     }
-  ]
+  ],
+  "functions": {
+    "api/*.py": {
+      "runtime": "python"
+    }
+  }
 }
