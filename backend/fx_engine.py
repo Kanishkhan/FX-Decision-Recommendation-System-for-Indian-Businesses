@@ -263,28 +263,129 @@ class FXEngine:
         return results
 
     def get_recommendation(self, currency='USD', target_date=None, forecast_days=7):
-        """Combines risk and forecast for final recommendation on target date for a specific currency."""
+        """
+        Generates FX hedging recommendations for both Importers (payables exposure)
+        and Exporters (receivables exposure) using risk score and forecast trend.
+        """
+
         risk = self.get_risk_assessment(currency=currency, target_date=target_date)
         forecast = self.get_forecast(currency=currency, days=forecast_days, target_date=target_date)
-        
-        if not risk or not forecast: return "Engine Not Ready"
-        if "error" in risk: return risk["error"]
-        if "error" in forecast: return forecast["error"]
-        
+
+        if not risk or not forecast:
+            return {
+                "importer_strategy": "Engine not ready",
+                "exporter_strategy": "Engine not ready"
+            }
+
+        if "error" in risk:
+            return {
+                "importer_strategy": risk["error"],
+                "exporter_strategy": risk["error"]
+            }
+
+        if "error" in forecast:
+            return {
+                "importer_strategy": forecast["error"],
+                "exporter_strategy": forecast["error"]
+            }
+
         score = risk.get('score', 0)
         trend = forecast.get('trend', 'STABLE')
-        
+
+        # ---------- HIGH RISK (COMMON LOGIC) ----------
         if score > 75:
-            return f"CRITICAL HEDGE ({currency}) - High volatility detected. Secure forward rates now."
+            imp_msg = (
+                f"CRITICAL HEDGE ({currency}) – Extreme volatility detected. "
+                f"Importers should immediately secure forward contracts to protect against adverse price spikes."
+            )
+            exp_msg = (
+                f"CRITICAL HEDGE ({currency}) – Extreme volatility detected. "
+                f"Exporters should lock receivable conversion rates to protect revenue from sudden currency declines."
+            )
+
+        # ---------- MEDIUM RISK ----------
         elif score > 55:
+            # IMPORTER
             if trend == "UP":
-                return f"PARTIAL HEDGE (75%) ({currency}) - Rising rates and moderate risk. Act preemptively."
+                imp_msg = (
+                    f"PARTIAL HEDGE (75%) ({currency}) – Upward trend with moderate risk. "
+                    f"Importers should hedge majority exposure to avoid rising payment costs."
+                )
+            elif trend == "DOWN":
+                imp_msg = (
+                    f"TACTICAL HEDGE (25%) ({currency}) – Trend currently favorable. "
+                    f"Importers may hedge minimally while benefiting from potential cost reductions."
+                )
             else:
-                return f"TACTICAL HEDGE (25%) ({currency}) - Volatility moderate, but trend is favorable."
-        elif trend == "UP":
-            return f"WATCHFUL BUYING ({currency}) - Low risk but rates are rising. Cover short-term needs."
+                imp_msg = (
+                    f"BALANCED HEDGE (50%) ({currency}) – Stable trend with moderate volatility. "
+                    f"Importers should balance protection and flexibility."
+                )
+
+            # EXPORTER
+            if trend == "DOWN":
+                exp_msg = (
+                    f"PARTIAL HEDGE (75%) ({currency}) – Downward trend with moderate risk. "
+                    f"Exporters should hedge most receivables to protect against revenue erosion."
+                )
+            elif trend == "UP":
+                exp_msg = (
+                    f"TACTICAL HEDGE (25%) ({currency}) – Favorable upward trend. "
+                    f"Exporters may hedge selectively while retaining upside potential."
+                )
+            else:
+                exp_msg = (
+                    f"BALANCED HEDGE (50%) ({currency}) – Stable market conditions. "
+                    f"Exporters should maintain balanced protection against uncertainty."
+                )
+
+        # ---------- LOW RISK ----------
         else:
-            return f"WAIT / SPOT CONVERSION ({currency}) - Optimal conditions. No immediate hedging needed."
+            # IMPORTER
+            if trend == "UP":
+                imp_msg = (
+                    f"WATCHFUL BUYING ({currency}) – Low volatility but strengthening currency. "
+                    f"Importers should gradually cover short-term payables."
+                )
+            elif trend == "DOWN":
+                imp_msg = (
+                    f"WAIT / SPOT CONVERSION ({currency}) – Stable and favorable conditions. "
+                    f"Importers may delay conversion to benefit from improving rates."
+                )
+            else:
+                imp_msg = (
+                    f"STAGGERED BUYING ({currency}) – Stable market. "
+                    f"Importers may convert in phases to optimize pricing."
+                )
+
+            # EXPORTER
+            if trend == "DOWN":
+                exp_msg = (
+                    f"WATCHFUL SELLING ({currency}) – Currency weakening slightly. "
+                    f"Exporters should convert near-term receivables to avoid erosion."
+                )
+            elif trend == "UP":
+                exp_msg = (
+                    f"DELAYED CONVERSION ({currency}) – Favorable strengthening trend. "
+                    f"Exporters may defer conversion to capture better rates."
+                )
+            else:
+                exp_msg = (
+                    f"STAGGERED CONVERSION ({currency}) – Stable market. "
+                    f"Exporters may convert receivables gradually to reduce timing risk."
+                )
+
+        return {
+            "importer_strategy": imp_msg,
+            "exporter_strategy": exp_msg,
+            "risk_score": score,
+            "trend": trend,
+            "risk_level": (
+                "High" if score > 75 else
+                "Medium" if score > 55 else
+                "Low"
+            )
+        }
 
     def get_full_dashboard(self, show_plot=False, include_analysis=False, target_date=None, forecast_days=7):
         """Returns a consolidated summary of all metrics for all pairs for a given date."""
