@@ -8,3 +8,4 @@ numpy
 openpyxl
 flask
 flask-cors
+gunicorn
