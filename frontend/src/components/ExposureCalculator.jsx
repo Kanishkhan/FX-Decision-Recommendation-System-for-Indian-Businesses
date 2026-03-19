@@ -170,7 +170,9 @@ const ExposureCalculator = ({ horizon = 7 }) => {
                         <div style={s.inputGroup}>
                             <label style={s.label}>Transaction Volume ({formData.currency})</label>
                             <div style={{ position: 'relative' }}>
-                                <span style={{ position: 'absolute', left: '16px', top: '14px', color: '#666' }}>$</span>
+                                <span style={{ position: 'absolute', left: '16px', top: '14px', color: '#666' }}>
+                                    {formData.currency === 'GBP' ? '£' : formData.currency === 'EUR' ? '€' : formData.currency === 'JPY' ? '¥' : '$'}
+                                </span>
                                 <input
                                     type="number"
                                     name="amount"
