@@ -27,6 +27,6 @@ package-lock.json
 *.swo
 
 # Project Specific
-backend/outputs/plots/
+# backend/outputs/plots/ (Allowed for deployment)
 *.log
 .DS_Store
