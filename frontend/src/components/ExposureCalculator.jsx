@@ -26,6 +26,8 @@ ChartJS.register(
     Legend
 );
 
+const API_BASE = 'https://fx-api-production-ae75.up.railway.app/api';
+
 const ExposureCalculator = ({ horizon = 7 }) => {
     const [formData, setFormData] = useState({
         amount: 100000,
@@ -48,12 +50,12 @@ const ExposureCalculator = ({ horizon = 7 }) => {
         try {
             const payload = { ...formData, horizon };
             // Standard exposure calculation
-            const response = await axios.post('/api/calculate-exposure', payload);
+            const response = await axios.post(`${API_BASE}/calculate-exposure`, payload);
             if (response.data.error) throw new Error(response.data.error);
             setResult(response.data);
 
             // Prescriptive recommendation (parallel call)
-            const recResponse = await axios.post('/api/business-recommendation', payload);
+            const recResponse = await axios.post(`${API_BASE}/business-recommendation`, payload);
             if (recResponse.data.error) throw new Error(recResponse.data.error);
             setRecommendation(recResponse.data);
         } catch (error) {
