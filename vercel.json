@@ -16,10 +16,5 @@
       "destination": "/index.html",
       "permanent": false
     }
-  ],
-  "functions": {
-    "api/*.py": {
-      "runtime": "python"
-    }
-  }
+  ]
 }
