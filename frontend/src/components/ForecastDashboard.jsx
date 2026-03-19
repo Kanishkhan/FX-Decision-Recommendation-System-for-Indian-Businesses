@@ -26,7 +26,8 @@ ChartJS.register(
     Legend
 );
 
-const API_BASE = 'https://fx-decision-recommendation-system-for.onrender.com/api';
+const API_BASE = 'https://fx-api-production-ae75.up.railway.app/api';
+//const API_BASE = 'http://localhost:5000/api';
 
 const CURRENCY_COLORS = {
     USD: '#2563EB',
