@@ -3,6 +3,8 @@ import axios from 'axios';
 import { BarChart3, X, ChevronLeft, ChevronRight, Image } from 'lucide-react';
 import GlassCard from './GlassCard';
 
+const API_BASE = 'https://fx-api-production-ae75.up.railway.app/api';
+
 const PLOT_LABELS = {
     'adf_stationarity_summary.png': 'ADF Stationarity Test Summary',
     'returns_distribution.png': 'Currency Returns Distribution',
@@ -25,7 +27,7 @@ const StatisticalPlots = () => {
     useEffect(() => {
         const fetchPlots = async () => {
             try {
-                const response = await axios.get('/api/plots');
+                const response = await axios.get(`${API_BASE}/plots`);
                 setPlots(response.data.plots || []);
             } catch (error) {
                 console.error('Error fetching plots:', error);
@@ -101,7 +103,7 @@ const StatisticalPlots = () => {
                             }}
                         >
                             <img
-                                src={`/api/plots/${filename}`}
+                                src={`${API_BASE}/plots/${filename}`}
                                 alt={PLOT_LABELS[filename] || filename}
                                 style={{
                                     width: '100%',
@@ -168,7 +170,7 @@ const StatisticalPlots = () => {
 
                     <div onClick={e => e.stopPropagation()} style={{ maxWidth: '90vw', maxHeight: '85vh', textAlign: 'center' }}>
                         <img
-                            src={`/api/plots/${selectedPlot}`}
+                            src={`${API_BASE}/plots/${selectedPlot}`}
                             alt={PLOT_LABELS[selectedPlot] || selectedPlot}
                             style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain', borderRadius: '8px' }}
                         />
