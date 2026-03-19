@@ -20,7 +20,6 @@ import RateChart from './components/RateChart';
 import VolatilityChart from './components/VolatilityChart';
 import CorrelationMatrix from './components/CorrelationMatrix';
 import RiskMap from './components/RiskMap';
-import PersonaCards from './components/PersonaCards';
 import ExposureCalculator from './components/ExposureCalculator';
 import RiskGauge from './components/RiskGauge';
 import BlackSwanAlert from './components/BlackSwanAlert';
@@ -105,30 +104,101 @@ function App() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                 {CURRENCIES.map(curr => {
                   const pairData = data?.pairs?.[curr.code];
+                  const rec = pairData?.recommendation;
+                  
+                  // Helper to parse "PARTIAL HEDGE (75%)" etc.
+                  const getHedgePct = (msg) => {
+                    const match = msg?.match(/(\d+)%/);
+                    return match ? match[1] : null;
+                  };
+
+                  const impPct = getHedgePct(rec?.importer_strategy);
+                  const expPct = getHedgePct(rec?.exporter_strategy);
+
                   return (
-                    <GlassCard
-                      key={curr.code}
-                      title={`${curr.code} Strategy`}
-                      style={{ borderLeft: `4px solid ${curr.color}`, position: 'relative', overflow: 'hidden' }}
+                    <GlassCard 
+                      key={curr.code} 
+                      title={`${curr.code} STRATEGY`}
+                      style={{ 
+                        borderLeft: `4px solid ${curr.color}`,
+                        padding: '0'
+                      }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{ background: `linear-gradient(135deg, ${curr.color}20, transparent)`, padding: '0.8rem', borderRadius: '12px' }}>
-                          <ShieldCheck size={28} color={curr.color} />
+                      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        {/* Importer Strip (PAY) */}
+                        <div style={{ 
+                          padding: '1.2rem', 
+                          background: 'linear-gradient(90deg, rgba(37, 99, 235, 0.08) 0%, transparent 100%)',
+                          borderBottom: '1px solid rgba(255,255,255,0.05)'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <TrendingUp size={14} color="#2563EB" />
+                              <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '1px' }}>IMPORTER (PAYABLES)</span>
+                            </div>
+                            {impPct && (
+                              <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#2563EB', border: '1px solid rgba(37, 99, 235, 0.3)', padding: '2px 6px', borderRadius: '4px' }}>
+                                {impPct}% HEDGE
+                              </span>
+                            )}
+                          </div>
+                          <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>
+                            {rec?.importer_strategy?.split(' – ')[0] || 'Syncing...'}
+                          </h4>
+                          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, margin: '0' }}>
+                             {rec?.importer_strategy?.split(' – ')[1] || 'Calculating protection path...'}
+                          </p>
                         </div>
-                        <div>
-                          <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>{pairData?.recommendation || 'Engine Not Ready'}</h4>
+
+                        {/* Exporter Strip (REC) */}
+                        <div style={{ 
+                          padding: '1.2rem', 
+                          background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%)'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <TrendingDown size={14} color="#10B981" />
+                              <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#10B981', textTransform: 'uppercase', letterSpacing: '1px' }}>EXPORTER (RECEIVABLES)</span>
+                            </div>
+                            {expPct && (
+                              <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '2px 6px', borderRadius: '4px' }}>
+                                {expPct}% HEDGE
+                              </span>
+                            )}
+                          </div>
+                          <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>
+                            {rec?.exporter_strategy?.split(' – ')[0] || 'Syncing...'}
+                          </h4>
+                          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, margin: '0' }}>
+                             {rec?.exporter_strategy?.split(' – ')[1] || 'Calculating protection path...'}
+                          </p>
+                        </div>
+
+                        {/* Footer Badges */}
+                        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '0.8rem 1.2rem', display: 'flex', gap: '8px' }}>
                           <span style={{
-                            padding: '2px 8px',
+                            padding: '3px 10px',
                             borderRadius: '100px',
-                            background: pairData?.risk_level === 'High' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(37, 99, 235, 0.2)',
-                            color: pairData?.risk_level === 'High' ? '#EF4444' : '#2563EB',
+                            background: pairData?.risk_level === 'High' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(37, 99, 235, 0.1)',
+                            color: pairData?.risk_level === 'High' ? '#EF4444' : '#60A5FA',
                             fontWeight: 800,
-                            fontSize: '0.65rem',
+                            fontSize: '0.6rem',
                             letterSpacing: '0.5px',
-                            display: 'inline-block',
-                            marginTop: '6px'
+                            border: `1px solid ${pairData?.risk_level === 'High' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(37, 99, 235, 0.2)'}`
                           }}>
-                            {pairData?.risk_level?.toUpperCase()} RISK
+                            {pairData?.risk_level?.toUpperCase()} VOLATILITY
+                          </span>
+                          <span style={{
+                            padding: '3px 10px',
+                            borderRadius: '100px',
+                            background: rec?.trend === 'UP' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                            color: rec?.trend === 'UP' ? '#34D399' : '#F87171',
+                            fontWeight: 800,
+                            fontSize: '0.6rem',
+                            letterSpacing: '0.5px',
+                            border: `1px solid ${rec?.trend === 'UP' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`
+                          }}>
+                             {rec?.trend} TREND
                           </span>
                         </div>
                       </div>
@@ -137,10 +207,6 @@ function App() {
                 })}
               </div>
             </div>
-            <div style={{ marginTop: '2.5rem', marginBottom: '1.5rem', paddingLeft: '4px' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, opacity: 0.6, textTransform: 'uppercase', letterSpacing: '2px' }}>Persona Analysis</h3>
-            </div>
-            <PersonaCards spotRate={data?.pairs?.USD?.current_rate} />
           </>
         );
       case 'analytics':
