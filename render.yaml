@@ -1,0 +1,16 @@
+services:
+  # ─────────────────────────────────────────────────
+  # Python Flask Backend (Risk + Forecast + Data)
+  # ─────────────────────────────────────────────────
+  - type: web
+    name: fx-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd backend && gunicorn api_bridge:app --bind 0.0.0.0:$PORT --timeout 120 --workers 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: FLASK_DEBUG
+        value: "false"
+    autoDeploy: true

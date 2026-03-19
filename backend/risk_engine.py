@@ -103,3 +103,32 @@ if __name__ == "__main__":
     print("\n--- USD Risk Metrics ---")
     for k, v in usd_risk.items():
         print(f"{k}: {v}")
+
+"""
+========================================================================
+BUSINESS ANALYTICS IMPLEMENTATION NOTES & KEY CONCEPTS
+Author: Kanishkhan (Risk Scoring Engine)
+========================================================================
+1. Risk Gauge (Normalization & Weighting Strategy):
+   Formula: Risk = (0.6 * Volatility_Score) + (0.4 * Exposure_Score)
+   - Reason: Standard deviations are tiny logic intervals, whereas monetary
+     exposures are massive strings (e.g. $100,000). Before blending them, 
+     min-max scaling compresses them both into a clean 0-100 logic scale,
+     preventing the exposure cost from artificially dominating the risk score.
+
+2. Z-Score Anomaly Detection ("Black Swan" Trigger):
+   Formula: Z = (Today's Price - 30_Day_Average) / 30_Day_Volatility
+   - Rule: Trigger automatic alert if |Z| > 2.0
+   - Reason: A Z-score greater than 2.0 proves statistically that the currency
+     has deviated drastically from typical pricing behavior. This automates
+     monitoring and removes human emotion, pushing a critical alert when standard 
+     pricing models become unreliable.
+
+3. Value-at-Risk (VaR) 95% Confidence Methodology:
+   Formula: var_return_threshold = np.percentile(returns, 5)
+   - Reason: By isolating the 5th percentile of historical daily drops, the 
+     engine discards the single "worst freak accident day" but still captures 
+     a mathematically sound "worst-case scenario." Multiplying this crash 
+     percentage against live pricing gives CEOs concrete Rupee exposure targets.
+========================================================================
+"""

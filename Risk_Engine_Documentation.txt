@@ -1,0 +1,62 @@
+========================================================================
+BA PROJECT: FX DECISION RECOMMENDATION SYSTEM
+OFFICIAL DOCUMENTATION: THE RISK SCORING ENGINE (BY KANISHKHAN)
+========================================================================
+
+1. OVERVIEW OF THE RISK ENGINE
+------------------------------
+The Risk Scoring Engine is the "Intelligence Guardrail" of the entire FX Platform. While other modules predict where the price might go, my module calculates the mathematical danger of the market right now. It prevents the system from making reckless recommendations during highly unstable market events.
+
+2. THE RISK GAUGE (0-100 DANGER SCORE)
+--------------------------------------
+* MATH FORMULA: 
+  Risk Score = (0.6 × Normalized Volatility) + (0.4 × Normalized Exposure)
+
+* HOW IT WORKS:
+  - Volatility Score: Calculated by measuring the 30-day standard deviation (how wildly the price is jumping).
+  - Exposure Score: Calculated from the user's deal size (e.g., $100,000).
+  - Normalization: Since $100,000 and 0.005 volatility are different scales, I normalize them into a 0-100 range first.
+  - Weights: I assigned a 60% weight to market volatility and 40% to business exposure size.
+
+* IN THE WEBSITE:
+  This drives the color-coded Gauges (Low/Green, Medium/Yellow, High/Red).
+
+3. Z-SCORE ANOMALY DETECTION ("BLACK SWAN ALERT")
+-------------------------------------------------
+* MATH FORMULA: 
+  Z = (Today's Price - 30_Day_Average) / 30_Day_Volatility
+
+* THE THRESHOLD: 
+  - Alarm Trigger: If absolute Z-Score > 2.0.
+
+* BUSINESS LOGIC:
+  If a Z-score is higher than 2.0, it proves statistically that today's price movement is a rare "Once-in-a-Blue-Moon" event. When this happens, my code flips the "is_anomaly" flag to TRUE, which forces the "BLACK SWAN ALERT" banner onto the user's dashboard.
+
+4. VALUE-AT-RISK (VaR) - 95% CONFIDENCE
+---------------------------------------
+* MATH FORMULA: 
+  Percentile: np.percentile(Returns, 5)
+
+* HOW IT WORKS:
+  1. My code looks at the worst 5% of daily price drops in history. 
+  2. It finds the loss percentage for those terrible days (e.g., -1.2%).
+  3. It multiplies that percentage against today's exchange rate.
+
+* OUTPUT MESSAGE:
+  "There is a 5% chance you could lose more than ₹X amount of INR by tomorrow."
+  - This translates abstract math into concrete Rupee risks for the CEO.
+
+5. ADVANCED RISK MAPPING (VOLATILITY VS. SENSITIVITY)
+-----------------------------------------------------
+* THE VISUAL: A 4-Quadrant Scatter Plot.
+* THE INPUTS:
+  - Y-Axis (Height): My 30-day Volatility math. 
+  - X-Axis (Position): Market Correlation scores.
+
+* RESULT: 
+  If my math calculates high volatility, it physically shoves the currency (like GBP or JPY) into the top-left "High Risk" box, warning the user to avoid that currency immediately.
+
+6. CONCLUSION & BUSINESS IMPACT
+-------------------------------
+My module removes human emotion and error from currency trading. By using objective statistical boundaries (Z-Scores and VaR), the company is protected from bankruptcy-scale losses during sudden global market crashes.
+========================================================================

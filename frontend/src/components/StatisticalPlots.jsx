@@ -25,7 +25,7 @@ const StatisticalPlots = () => {
     useEffect(() => {
         const fetchPlots = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/plots');
+                const response = await axios.get('/api/plots');
                 setPlots(response.data.plots || []);
             } catch (error) {
                 console.error('Error fetching plots:', error);
@@ -101,7 +101,7 @@ const StatisticalPlots = () => {
                             }}
                         >
                             <img
-                                src={`http://localhost:5000/api/plots/${filename}`}
+                                src={`/api/plots/${filename}`}
                                 alt={PLOT_LABELS[filename] || filename}
                                 style={{
                                     width: '100%',
@@ -168,7 +168,7 @@ const StatisticalPlots = () => {
 
                     <div onClick={e => e.stopPropagation()} style={{ maxWidth: '90vw', maxHeight: '85vh', textAlign: 'center' }}>
                         <img
-                            src={`http://localhost:5000/api/plots/${selectedPlot}`}
+                            src={`/api/plots/${selectedPlot}`}
                             alt={PLOT_LABELS[selectedPlot] || selectedPlot}
                             style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain', borderRadius: '8px' }}
                         />

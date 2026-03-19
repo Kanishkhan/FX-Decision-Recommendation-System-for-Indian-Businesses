@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://fx-decision-recommendation-system-for.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/dist/$1"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index.html",
+      "permanent": false
+    }
+  ],
+  "functions": {
+    "api/*.py": {
+      "runtime": "python"
+    }
+  }
+}
