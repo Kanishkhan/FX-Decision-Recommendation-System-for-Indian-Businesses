@@ -378,12 +378,12 @@ function App() {
         return <ExposureCalculator horizon={horizon} />;
       case 'settings':
         return (
-          <div style={{ maxWidth: '600px' }}>
+          <div style={{ maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <GlassCard title="System Configuration">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
-                  <span>Engine Connection</span>
-                  <span style={{ color: '#10B981', fontSize: '0.8rem', fontWeight: 800 }}>DOCKER_BRIDGE_UP</span>
+                  <span>Backend API</span>
+                  <span style={{ color: '#10B981', fontSize: '0.8rem', fontWeight: 800 }}>REST API (Flask + Gunicorn)</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
                   <span>Forecast Horizon</span>
@@ -391,7 +391,23 @@ function App() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
                   <span>Volatility Window</span>
-                  <span style={{ color: 'var(--text-secondary)' }}>30 Days</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>30-Day Rolling Std Dev</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                  <span>Risk Model</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Z-Score + VaR (95%)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                  <span>Forecast Model</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Facebook Prophet</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                  <span>Data Source</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>RBI Historical + Yahoo Finance</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                  <span>Deployment</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Vercel (Frontend) + Railway (Backend)</span>
                 </div>
               </div>
             </GlassCard>
