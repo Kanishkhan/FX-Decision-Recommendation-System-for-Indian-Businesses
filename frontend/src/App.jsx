@@ -105,7 +105,7 @@ function App() {
                 {CURRENCIES.map(curr => {
                   const pairData = data?.pairs?.[curr.code];
                   const rec = pairData?.recommendation;
-                  
+
                   // Helper to parse "PARTIAL HEDGE (75%)" etc.
                   const getHedgePct = (msg) => {
                     const match = msg?.match(/(\d+)%/);
@@ -116,18 +116,18 @@ function App() {
                   const expPct = getHedgePct(rec?.exporter_strategy);
 
                   return (
-                    <GlassCard 
-                      key={curr.code} 
+                    <GlassCard
+                      key={curr.code}
                       title={`${curr.code} STRATEGY`}
-                      style={{ 
+                      style={{
                         borderLeft: `4px solid ${curr.color}`,
                         padding: '0'
                       }}
                     >
                       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         {/* Importer Strip (PAY) */}
-                        <div style={{ 
-                          padding: '1.2rem', 
+                        <div style={{
+                          padding: '1.2rem',
                           background: 'linear-gradient(90deg, rgba(37, 99, 235, 0.08) 0%, transparent 100%)',
                           borderBottom: '1px solid rgba(255,255,255,0.05)'
                         }}>
@@ -146,13 +146,13 @@ function App() {
                             {rec?.importer_strategy?.split(' – ')[0] || 'Syncing...'}
                           </h4>
                           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, margin: '0' }}>
-                             {rec?.importer_strategy?.split(' – ')[1] || 'Calculating protection path...'}
+                            {rec?.importer_strategy?.split(' – ')[1] || 'Calculating protection path...'}
                           </p>
                         </div>
 
                         {/* Exporter Strip (REC) */}
-                        <div style={{ 
-                          padding: '1.2rem', 
+                        <div style={{
+                          padding: '1.2rem',
                           background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%)'
                         }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -170,7 +170,7 @@ function App() {
                             {rec?.exporter_strategy?.split(' – ')[0] || 'Syncing...'}
                           </h4>
                           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, margin: '0' }}>
-                             {rec?.exporter_strategy?.split(' – ')[1] || 'Calculating protection path...'}
+                            {rec?.exporter_strategy?.split(' – ')[1] || 'Calculating protection path...'}
                           </p>
                         </div>
 
@@ -198,7 +198,7 @@ function App() {
                             letterSpacing: '0.5px',
                             border: `1px solid ${rec?.trend === 'UP' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`
                           }}>
-                             {rec?.trend} TREND
+                            {rec?.trend} TREND
                           </span>
                         </div>
                       </div>
@@ -369,28 +369,7 @@ function App() {
               </GlassCard>
             </div>
 
-            {/* Advanced Risk Mapping */}
-            <GlassCard title="Advanced Risk Mapping (Volatility vs Sensitivity)">
-              <div style={{ minHeight: '350px', padding: '1.5rem', marginTop: '1rem' }}>
-                {data?.analysis?.risk_map ? (
-                  <>
-                    <RiskMap data={data.analysis.risk_map} />
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '2.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem', fontStyle: 'italic', lineHeight: '1.4' }}>
-                      <strong>Interpretation:</strong> This quadrant identifies strategic risk clusters.
-                      Assets in the <strong>Top-Left (Volatile)</strong> require active hedging.
-                      Assets in the <strong>Bottom-Right (Safe Haven)</strong> are stable candidates for spot conversion.
-                    </p>
-                  </>
-                ) : (
-                  <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed var(--glass-border)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
-                    <div className="text-center">
-                      <Globe size={48} className="mx-auto mb-4 opacity-20" color="var(--text-secondary)" />
-                      <p style={{ color: 'var(--text-secondary)' }}>Advanced Risk Visualizer syncing with Prophet Engine...</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </GlassCard>
+
           </div>
         );
       case 'forecast':
