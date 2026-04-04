@@ -85,6 +85,16 @@ The Risk Engine isn't just a backend script; it drives the most critical visuals
 
 ---
 
+## Live System Demo 🚀
+
+**Frontend Dashboard (Vercel Deployment):**  
+https://fx-decision-recommendation-system-f-silk.vercel.app/
+
+**Note:**
+
+The frontend is permanently deployed for demonstration purposes.  
+The backend analytics engine is provided as source code and must be run locally to enable full functionality due to cloud free-tier hosting limitations.
+
 ## 🚀 Technical Setup & Quick Start
 
 ### A. Backend (Local Flask API)
@@ -105,7 +115,7 @@ The Risk Engine isn't just a backend script; it drives the most critical visuals
    - Open: `http://localhost:5000/api/dashboard`
    - Should return JSON with `risk_details` and `currency` data.
 
-### B. Frontend Local Development (React/Vite)
+### B. Frontend Local Development (React/Vite) [Optional]
 
 1. In a separate terminal:
    ```bash
@@ -122,16 +132,30 @@ The Risk Engine isn't just a backend script; it drives the most critical visuals
    ```
 4. Open: `http://localhost:5173`
 
-### C. Production on Vercel (Frontend) with Local/Remote Backend
+### C. Production on Vercel (Frontend)
 
-1. In Vercel project settings, add Environment Variable:
+**Live Deployment:** https://fx-decision-recommendation-system-f-silk.vercel.app/
+
+#### Option 1: Remote Backend (Recommended for Production)
+1. Deploy your Flask backend first to a cloud service (Railway, Heroku, AWS, etc.).
+2. In Vercel project settings → Environment Variables:
    - Key: `VITE_API_BASE_URL`
-   - Value: `http://host.docker.internal:5000/api` (for local tunnel) or `https://your-production-backend.com/api` (remote)
+   - Value: `https://your-backend-domain.com/api` (e.g., your Railway backend URL)
+3. Redeploy Vercel frontend.
+4. Confirm CORS is enabled in backend: `CORS(app)` already in `backend/api_bridge.py`.
 
-2. Deploy frontend to Vercel using standard Vite workflow (`vercel` CLI or Git integration).
-3. Ensure CORS is enabled in backend: already enabled in `backend/api_bridge.py` (`CORS(app)`).
-
-> If the frontend is on Vercel and the backend is local, use a tunneling service (e.g., ngrok) to expose your local backend URL, then set `VITE_API_BASE_URL` to that public ngrok URL.
+#### Option 2: Local Backend with Tunneling
+If you only have a local backend and want Vercel to access it:
+1. Install and run ngrok (free tunnel):
+   ```bash
+   ngrok http 5000
+   ```
+2. Copy the ngrok URL (e.g., `https://abc123.ngrok.io`).
+3. In Vercel environment variables:
+   - Key: `VITE_API_BASE_URL`
+   - Value: `https://abc123.ngrok.io/api`
+4. Redeploy Vercel frontend.
+5. **Note:** This works for testing only; production requires a real backend server.
 
 ---
 
