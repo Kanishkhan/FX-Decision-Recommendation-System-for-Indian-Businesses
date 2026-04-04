@@ -87,28 +87,51 @@ The Risk Engine isn't just a backend script; it drives the most critical visuals
 
 ## 🚀 Technical Setup & Quick Start
 
-To run this full-stack business analytics application locally:
+### A. Backend (Local Flask API)
 
-### 1. Backend (Python/Flask)
-```bash
-# Navigate to backend directory
-cd backend
-# Install dependencies
-pip install -r ../requirements.txt
-# Start the API Bridge
-python api_bridge.py
-```
+1. Navigate to backend folder:
+   ```bash
+   cd backend
+   ```
+2. Install Python dependencies:
+   ```bash
+   pip install -r ../requirements.txt
+   ```
+3. Start Flask API server:
+   ```bash
+   python api_bridge.py
+   ```
+4. Confirm service:
+   - Open: `http://localhost:5000/api/dashboard`
+   - Should return JSON with `risk_details` and `currency` data.
 
-### 2. Frontend (React/Vite)
-```bash
-# Navigate to frontend directory
-cd frontend
-# Install Node dependencies
-npm install
-# Start the development server
-npm run dev
-```
-Open `http://localhost:5173` to view the live Decision Support System.
+### B. Frontend Local Development (React/Vite)
+
+1. In a separate terminal:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. Create `.env` with local API value (optional):
+   ```bash
+   VITE_API_BASE_URL=http://localhost:5000/api
+   ```
+3. Run dev server:
+   ```bash
+   npm run dev
+   ```
+4. Open: `http://localhost:5173`
+
+### C. Production on Vercel (Frontend) with Local/Remote Backend
+
+1. In Vercel project settings, add Environment Variable:
+   - Key: `VITE_API_BASE_URL`
+   - Value: `http://host.docker.internal:5000/api` (for local tunnel) or `https://your-production-backend.com/api` (remote)
+
+2. Deploy frontend to Vercel using standard Vite workflow (`vercel` CLI or Git integration).
+3. Ensure CORS is enabled in backend: already enabled in `backend/api_bridge.py` (`CORS(app)`).
+
+> If the frontend is on Vercel and the backend is local, use a tunneling service (e.g., ngrok) to expose your local backend URL, then set `VITE_API_BASE_URL` to that public ngrok URL.
 
 ---
 
