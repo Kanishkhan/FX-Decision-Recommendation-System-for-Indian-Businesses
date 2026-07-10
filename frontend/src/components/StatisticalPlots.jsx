@@ -16,6 +16,8 @@ const PLOT_LABELS = {
     'Baseline_7Day_USD_INR_Forecast_vs_Actual.png': 'Baseline 7-Day Forecast vs Actual'
 };
 
+const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:5000/api';
+
 const StatisticalPlots = () => {
     const [plots, setPlots] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ const StatisticalPlots = () => {
     useEffect(() => {
         const fetchPlots = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/plots');
+                const response = await axios.get(`${API_BASE}/plots`);
                 setPlots(response.data.plots || []);
             } catch (error) {
                 console.error('Error fetching plots:', error);
@@ -101,7 +103,7 @@ const StatisticalPlots = () => {
                             }}
                         >
                             <img
-                                src={`http://localhost:5000/api/plots/${filename}`}
+                                src={`${API_BASE}/plots/${filename}`}
                                 alt={PLOT_LABELS[filename] || filename}
                                 style={{
                                     width: '100%',
@@ -168,7 +170,7 @@ const StatisticalPlots = () => {
 
                     <div onClick={e => e.stopPropagation()} style={{ maxWidth: '90vw', maxHeight: '85vh', textAlign: 'center' }}>
                         <img
-                            src={`http://localhost:5000/api/plots/${selectedPlot}`}
+                            src={`${API_BASE}/plots/${selectedPlot}`}
                             alt={PLOT_LABELS[selectedPlot] || selectedPlot}
                             style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain', borderRadius: '8px' }}
                         />
