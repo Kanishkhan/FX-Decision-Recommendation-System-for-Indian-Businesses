@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:5000/api';
+// Allows local development and Vercel production deployment.
+// Set VITE_API_BASE_URL (recommended) in .env or Vercel Environment Variables.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:5000/api');
 
 export function useFXData(selectedDate = null, horizon = 7) {
     const [data, setData] = useState(null);

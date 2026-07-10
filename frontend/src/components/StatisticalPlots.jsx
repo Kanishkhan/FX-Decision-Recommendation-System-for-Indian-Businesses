@@ -3,6 +3,8 @@ import axios from 'axios';
 import { BarChart3, X, ChevronLeft, ChevronRight, Image } from 'lucide-react';
 import GlassCard from './GlassCard';
 
+const API_BASE = 'https://fx-api-production-ae75.up.railway.app/api';
+
 const PLOT_LABELS = {
     'adf_stationarity_summary.png': 'ADF Stationarity Test Summary',
     'returns_distribution.png': 'Currency Returns Distribution',
